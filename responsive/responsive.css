@@ -1,0 +1,49 @@
+
+/* Bottom right cartoon */
+@media only screen and (min-width: 0px) and (max-width: 600px) {
+	.software {
+		width:479px; 
+		height:631px; 
+		background:url(software.png) -725px -580px;
+	}
+}
+
+/* Bottom left cartoon */
+@media only screen and (min-width: 601px) and (max-width: 800px) {
+	.software {
+		width:725px; 
+		height:631px; 
+		background:url(software.png) 0px -580px;
+	}
+}
+
+/* Top right cartoon */
+@media only screen and (min-width: 801px) and (max-width: 1000px) {
+	.software {
+		width:334px; 
+		height:580px; 
+		background:url(software.png) -870px 0px;
+	}
+}
+
+/* Top middle cartoon */
+@media only screen and (min-width: 1001px) and (max-width: 1200px) {
+	.software {
+		width:420px; 
+		height:580px; 
+		background:url(software.png) -450px 0px;
+	}
+}
+
+/* Top left cartoon */
+@media only screen and (min-width: 1201px) {
+	.software {
+		width:450px; 
+		height:580px; 
+		background:url(software.png) 0px 0px;
+	}
+}
+
+/*
+Image size is 1204 x 1211 
+*/
