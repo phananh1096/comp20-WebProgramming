@@ -1,0 +1,30 @@
+body {
+	background-color: #800020;
+	color: white;
+	font-family: "Helvetica", sans-serif;
+	font-size: 40px
+	text-align: center;
+}
+h1 {
+	background-color: #800020;
+	color: white;
+	font-family: "Helvetica", sans-serif;
+	text-align: center;
+	font-size: 35px;
+}
+
+#wedo {
+	width: 50%; 
+    margin: 0 auto;
+    display: block;
+    padding-bottom: 10px
+}
+
+#lyrics {
+	font-family: "Helvetica";
+	color: white;
+	text-align: center;
+	font-size: 26px;
+}
+
+
