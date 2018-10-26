@@ -1,80 +1,3 @@
-function getTimes(station_data, station_name) {
-  // gets 4 latest schedules
-  var arrive;
-  var depart;
-  var trains = [[0,0],[0,0],[0,0],[0,0]];
-  var direction = ['tbd', 'tbd', 'tbd', 'tbd'];
-  for (var i = 0; i < 4; i++) {
-      arrive = station_data.data[i].attributes.arrival_time;
-      //console.log('arrival time is: ' + arrive);
-
-      depart = station_data.data[i].attributes.departure_time;
-      //console.log('departure time is: ' + depart);
-      if (arrive != null && depart != null) {
-        arrive = arrive.substring(11,16);
-        trains[i][0] = arrive;
-        depart = depart.substring(11,16);
-        trains[i][1] = depart;
-        console.log('Got both arrive and depart!');
-      }
-      else if (arrive == null && depart != null) {
-        trains[i][0] = 'Not available';
-        depart = depart.substring(11,16);
-        trains[i][1] = depart;
-        console.log('Got only depart');
-      }
-      else if (depart == null && arrive != null) {
-        arrive = arrive.substring(11,16);
-        trains[i][0] = arrive;
-        trains[i][1] = 'Not available';
-        console.log('Got only arrive!');
-      }  
-      else {
-          trains[i][0] = 'Not available'; 
-          trains[i][1] = 'Not available'; 
-        console.log("Didn't get anything :(");
-      }
-  }
-  for (var i = 0; i < 4; i++) {
-    if (station_data.data[i].attributes.direction_id == '0')
-      direction[i] = 'Southbound (to Ashmont/Braintree)';
-    else 
-      direction[i] = 'Northbound (to Alewife)';
-    console.log(direction[i]);
-  }
-
-  time = '<h1> Station: ' + station_name + '</h1>' + '<table>' + '<tr>' + '<th> Arrival time</th>' + '<th> Departure time</th>' + '<th> Direction</th>' + '</tr>' +
-        '<tr>' + '<td>' + trains[0][0] + '</td>' + '<td>' + trains[0][1] + '</td>' + '<td>' + direction[0] + '</td>' + 
-        '<tr>' + '<td>' + trains[1][0] + '</td>' + '<td>' + trains[1][1] + '</td>' + '<td>' + direction[1] + '</td>' + 
-        '<tr>' + '<td>' + trains[2][0] + '</td>' + '<td>' + trains[2][1] + '</td>' + '<td>' + direction[2] + '</td>' + 
-        '<tr>' + '<td>' + trains[3][0] + '</td>' + '<td>' + trains[3][1] + '</td>' + '<td>' + direction[3] + '</td>' + '</table>';
-  return time;
-}
-
-///* 
-function makeinfowindow(station, curr_mark) {
-    var link = "https://chicken-of-the-sea.herokuapp.com/redline/schedule.json?stop_id=" + station[4];
-    var request = new XMLHttpRequest();
-    request.open('GET', link, true);
-    request.send();
-    request.onreadystatechange = function() {
-        if (request.readyState == 4 && request.status == 200) {
-            data = request.responseText;
-            station_data = JSON.parse(data);
-            console.log(station_data);
-            var info_w = new google.maps.InfoWindow();
-            info_w.setContent(getTimes(station_data,station[0]) /*station_data.data[4].attributes.departure_time*/);
-            info_w.open(map,curr_mark);
-        }
-    }
-
-
-    //format: 2018-10-24T18:04:00-04:00
-}
-
-
-//*/
-
 
 
 
@@ -91,7 +14,7 @@ var stations = [
       ['North Quincy', 42.275275, -71.029583, 9,'place-nqncy'],
       ['Shawmut', 42.29312583, -71.06573796000001, 10,'place-smmnl'],
       ['Davis', 42.39674, -71.121815, 11,'place-davis'],
-      ['Alewife', 42.395428, -71.142483, 12,'place-alfcls'],
+      ['Alewife', 42.395428, -71.142483, 12,'place-alfcl'],
       ['Kendall/MIT', 42.36249079, -71.08617653, 13,'place-knncl'],
       ['Charles/MGH', 42.361166, -71.070628, 14,'place-chmnl'],
       ['Downtown Crossing', 42.355518, -71.060225, 15,'place-dwnxg'],
@@ -104,22 +27,16 @@ var stations = [
       ['Braintree', 42.2078543, -71.0011385, 22,'place-brntn']
     ]; 
 
-function display_station (nearest, distance) {
-var display_station = '<h2>Nearest station is: </h1>' + nearest[0] + '<h3>Distance from you: </h3>' + distance;
-  return display_station;
-}
 
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 15,
+    zoom: 14,
     center: {lat: 42.352271, lng: -71.05524200000001},
     mapTypeId: 'terrain'
   });       
   setpolyline(map);
   setMarkers(map);
   locate_me(map);
-
-
 }
 
 function locate_me(map) {
@@ -182,6 +99,10 @@ function locate_me(map) {
                     console.warn(`ERROR(${err.code}): ${err.message}`);
                   }
                   navigator.geolocation.getCurrentPosition(success, error, options);
+}
+function display_station (nearest, distance) {
+var display_station = '<h2>Nearest station is: </h1>' + nearest[0] + '<h3>Distance from you: </h3>' + distance;
+  return display_station;
 }
 
 
@@ -249,11 +170,81 @@ function setMarkers(map) {
                   }
 }
 
+
+///* 
+function makeinfowindow(station, curr_mark) {
+    var link = "https://chicken-of-the-sea.herokuapp.com/redline/schedule.json?stop_id=" + station[4];
+    var request = new XMLHttpRequest();
+    request.open('GET', link, true);
+    request.send();
+    request.onreadystatechange = function() {
+        if (request.readyState == 4 && request.status == 200) {
+            data = request.responseText;
+            station_data = JSON.parse(data);
+            console.log(station_data);
+            var info_w = new google.maps.InfoWindow();
+            info_w.setContent(getTimes(station_data,station[0]) /*station_data.data[4].attributes.departure_time*/);
+            info_w.open(map,curr_mark);
+        }
+    }
+}
+
 function pass_into_listener(station, marker) {
         google.maps.event.addListener(marker, 'click', function() {
-      makeinfowindow(station, marker);
+        makeinfowindow(station, marker);
   });
  }
+
+ function getTimes(station_data, station_name) {
+  var time = '<h1>Sorry, station data not available </h1>';
+  // Checks for wollaston edge case: 
+  if (station_data.data.length == 0) {
+    return time;
+  }
+  // gets 4 latest schedules
+  var arrive;
+  var depart;
+  var trains = [[0,0],[0,0],[0,0],[0,0]];
+  var direction = ['tbd', 'tbd', 'tbd', 'tbd'];
+  for (var i = 0; i < 4; i++) {
+      arrive = station_data.data[i].attributes.arrival_time;
+      depart = station_data.data[i].attributes.departure_time;
+      if (arrive != null && depart != null) {
+        arrive = arrive.substring(11,16);
+        trains[i][0] = arrive;
+        depart = depart.substring(11,16);
+        trains[i][1] = depart;
+      }
+      else if (arrive == null && depart != null) {
+        trains[i][0] = 'Not available';
+        depart = depart.substring(11,16);
+        trains[i][1] = depart;
+      }
+      else if (depart == null && arrive != null) {
+        arrive = arrive.substring(11,16);
+        trains[i][0] = arrive;
+        trains[i][1] = 'Not available';
+      }  
+      else {
+          trains[i][0] = 'Not available'; 
+          trains[i][1] = 'Not available'; 
+      }
+  }
+  for (var i = 0; i < 4; i++) {
+    if (station_data.data[i].attributes.direction_id == '0')
+      direction[i] = 'Southbound (to Ashmont/Braintree)';
+    else 
+      direction[i] = 'Northbound (to Alewife)';
+  }
+
+  time = '<h1> Station: ' + station_name + '</h1>' + '<table>' + '<tr>' + '<th> Arrival time</th>' + '<th> Departure time</th>' + '<th> Direction</th>' + '</tr>' +
+        '<tr>' + '<td>' + trains[0][0] + '</td>' + '<td>' + trains[0][1] + '</td>' + '<td>' + direction[0] + '</td>' + 
+        '<tr>' + '<td>' + trains[1][0] + '</td>' + '<td>' + trains[1][1] + '</td>' + '<td>' + direction[1] + '</td>' + 
+        '<tr>' + '<td>' + trains[2][0] + '</td>' + '<td>' + trains[2][1] + '</td>' + '<td>' + direction[2] + '</td>' + 
+        '<tr>' + '<td>' + trains[3][0] + '</td>' + '<td>' + trains[3][1] + '</td>' + '<td>' + direction[3] + '</td>' + '</table>';
+  return time;
+}
+
 
   /*
 
