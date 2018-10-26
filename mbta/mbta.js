@@ -76,17 +76,17 @@ function locate_me(map) {
                       title: "You're here"
               });
 
-              // EQUATION FOR INITIATING POLYLINE TO CLOSEST STATION
+              // Retrieves closest station
               var closest_station = get_station_distance(lat, long);
               loc_marker.addListener('click', function() {
               // Opens infowindow for loc_marker that shows where. 
               var nearest_train = new google.maps.InfoWindow({
-                  content: '<h2>Nearest station is: </h1>' + closest_station[0][0] + '<h3>Distance from you: </h3>' +'<p>' + closest_station[1] + ' miles</p>'
+                  content: '<h2>Nearest station is: </h2>' + closest_station[0][0] + '<h2>Distance from you: </h2>' +'<p>' + closest_station[1] + ' miles</p>'
                 });
               nearest_train.open(map,loc_marker); 
                 });
 
-              //***********Drawing polyline 
+              // Draws polyline between marker and closest station
               var closest_path = new google.maps.Polyline({
                 path: [{lat: closest_station[0][1], lng:closest_station[0][2]},{lat:lat, lng:long}],
                 geodesic: true,
@@ -95,7 +95,6 @@ function locate_me(map) {
                 strokeWeight: 2
               });
               closest_path.setMap(map);
-              //**************
           }
           function error(err) {
               console.warn(`ERROR(${err.code}): ${err.message}`);
@@ -103,7 +102,7 @@ function locate_me(map) {
           navigator.geolocation.getCurrentPosition(success, error, options);
 }
 
-
+// Function that sets the polyline
 function setpolyline (map) {
           // Script for the polyline
           var flightPlanCoordinates = [
@@ -136,8 +135,7 @@ function setpolyline (map) {
 }
 
 
-// Script for the Markers
-  
+// Functiont that sets the train markers
 function setMarkers(map) {
           var icon = {
               url: "MBTA.png",
@@ -164,8 +162,7 @@ function setMarkers(map) {
           }
 }
 
-
-///* 
+// Function that renders infowindow when marker is clicked
 function makeinfowindow(station, curr_mark) {
           var link = "https://chicken-of-the-sea.herokuapp.com/redline/schedule.json?stop_id=" + station[4];
           var request = new XMLHttpRequest();
@@ -175,9 +172,8 @@ function makeinfowindow(station, curr_mark) {
               if (request.readyState == 4 && request.status == 200) {
                   data = request.responseText;
                   station_data = JSON.parse(data);
-                  console.log(station_data);
                   var info_w = new google.maps.InfoWindow();
-                  info_w.setContent(getTimes(station_data,station[0]) /*station_data.data[4].attributes.departure_time*/);
+                  info_w.setContent(getTimes(station_data,station[0]));
                   info_w.open(map,curr_mark);
               }
           }
@@ -189,7 +185,7 @@ function pass_into_listener(station, marker) {
           });
  }
 
- function getTimes(station_data, station_name) {
+function getTimes(station_data, station_name) {
           var time = '<h1>Sorry, station data not available </h1>';
           // Checks for wollaston edge case: 
           if (station_data.data.length == 0) {
@@ -198,9 +194,13 @@ function pass_into_listener(station, marker) {
           // gets 4 latest schedules
           var arrive;
           var depart;
-          var trains = [[0,0],[0,0],[0,0],[0,0]];
-          var direction = ['tbd', 'tbd', 'tbd', 'tbd'];
+          var trains = [[0,0],[0,0],['TBD','TBD'],['TBD','TBD']];
+          var direction = ['Unavailable', 'Unavailable', 'Unavailable', 'Unavailable'];
           for (var i = 0; i < 4; i++) {
+            if (i == station_data.data.length) {
+              break;
+            }
+            else {
               arrive = station_data.data[i].attributes.arrival_time;
               depart = station_data.data[i].attributes.departure_time;
               if (arrive != null && depart != null) {
@@ -223,6 +223,7 @@ function pass_into_listener(station, marker) {
                   trains[i][0] = 'Not available'; 
                   trains[i][1] = 'Not available'; 
               }
+            }
           }
           for (var i = 0; i < 4; i++) {
             if (station_data.data[i].attributes.direction_id == '0')
@@ -238,7 +239,6 @@ function pass_into_listener(station, marker) {
           return time;
 }
 
-// Check if infowindow exist, else close
 
 
 
