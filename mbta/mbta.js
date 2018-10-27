@@ -53,7 +53,7 @@ function locate_me(map) {
                 closest_station[0] = stations[i];
               }
             }
-          closest_station[1] = (closest_distance * 0.621371);  
+          closest_station[1] = (closest_distance * 0.621371 * 0.001);  
           return closest_station;
          }
         
