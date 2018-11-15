@@ -91,7 +91,7 @@ GameManager.prototype.actuate = function () {
     time = time.toJSON();
     player_data = {"username":name, "score": this.score, "grid": final_grid, "created_at": time}
     $.post("https://aqueous-forest-97699.herokuapp.com/submit", player_data, function(data, status, jqXHR) {
-        $('#top_scores').innerHTML = "<p>" + data + "</p>";
+        //$('#top_scores').innerHTML = "<p>" + data + "</p>";
         alert(data);
         //console.log(data);
         // Do something to show the html popup here.
