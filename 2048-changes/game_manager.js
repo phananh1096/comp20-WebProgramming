@@ -87,9 +87,7 @@ GameManager.prototype.actuate = function () {
 
     var name = prompt("Please enter your name!", "");
     var final_grid = JSON.stringify(this.grid);
-    var time = new Date();
-    time = time.toJSON();
-    player_data = {"username":name, "score": this.score, "grid": final_grid, "created_at": time}
+    player_data = {"username":name, "score": this.score, "grid": final_grid}
     $.post("https://aqueous-forest-97699.herokuapp.com/submit", player_data, function(data, status, jqXHR) {
         //$('#top_scores').innerHTML = "<p>" + data + "</p>";
         alert(data);
