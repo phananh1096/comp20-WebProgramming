@@ -1,0 +1,21 @@
+README:
+
+1. What is this purpose of this Git repository? (duh!)
+
+The purpose of this Git repository is to display the various projects completed in Comp 20. Some of the topics that were touched on while completing the assignments are: Client-side programming (HTML, CSS, Javascript) as well as Server-side programming (Node.js, Express, MongoDB and web security).
+
+2. What was your favorite lab or assignment and why?
+
+My favorite assignment was the mbta assignment. It was my first experience using and integrating Web APIs and it was a relatively steep learning curve. Having gone through the assignment, I feel much more confident in my web programming skills and i feel that I can successfully integrate different Web APIs to build a working program.
+
+3. How much do you think you have grown from day 1 of this course to now?
+
+I've definitely grown a lot since day 1 of this course. Coming into the course, I had rudimentary knowledge of how the internet works and I think that Comp 20 has successfully provided me with a bigger picture understanding. Although there remains questions and many areas to dive into, I feel that I've been equipped with the necessary skills to start learning and applying new concepts by myself now.
+
+4. What was the most important thing that you learned in this course? Cite two examples as evidence.
+
+The most important takeaway from the course is really project-management skills. There were times where quizzes, labs and assignments were all due and it was necessary to develop time-allocation skills in order to make sure everything was balanced. Good examples were assignments 2 (mbta) and 3 (2048). These were generally longer assignments where the implementation of the code was more tedious and involved a lot more edge cases. Simply understanding the theory behind it was not enough and I found that I had to allocate a lot more time to iron out bugs. These are necessary skills needed in developing good and stable software. 
+
+5. Now that you have finished the course, what topic would you like to delve deeper into?
+
+I'd like to dive a bit deeper into Server-side programming. Our group project (implementation of a music-streaming/editing web app) gave me the opportunity to dive deeper into programming servers that would allow continous streaming. I would love to continue on this route and perhaps look deeper into cloud and parallel computing!
