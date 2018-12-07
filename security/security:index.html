@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Assignment 4</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+
+<body class="bg-light">
+    <h1> Assignment 4 </h1>
+
+    <h2> 1. Introduction </h2>
+
+    <p> For this assignment, I am required to give a security assessment of my partner's server-side application. The product is a Node.js server that takes in dat via post requests, handles it and inserts the data into a MongoDB databse. Get requests to the server returns either the top ten scores or all scores (in JSON) for a specific username. </p>
+    
+    <h2> 2. Methodology </h2>
+
+    <p> My testing is split into 2 main sections. The first is out-of-the-box testing or "blackbox" testing. I attempted to see if I can use curl to send data to the server. I then took a look at the code itself and see if there are vulnerabilities. Lastly I wrote a bash script to test if the server has effective control against spamming.
+
+    <h2> 3. Abstract of findings </h2>
+    <p> I was able to find 3 vulnerabilities. The first is related to Cross-Site Scripting. This basically means that I was able to send bad data to the server which, when ran on the client-side, allowed me to run my own processes. The second is injections to the database. I was able to gain access to data that i otherwise would not be able to normally access. The final one was a spam vulnerability where the server does not have effective floodgates against spamming. 
+
+    <h2> 4. Issues found </h2>
+
+    <h3> a. Cross-Site-Scripting (XSS) </h3>    
+    <h4> Location </h4>
+        <p>response.send(allScores) in app.POST</p>
+
+    <h4> Severity of issue </h4>
+        <p> HIGH. Without proper clearning of data, malicious users are able to send scripts to other users via POST request. This can allow them to potentially run anything on other users' computers and is a huge security breach. </p> 
+    <h4> Description of issue </h4>
+        <p> Through malicious curl POST requests, I was able to send a simple script to the database: </p>
+
+        <img src="POST.png">
+
+        <p> When this script is retrieved from the server by any user, it opens up a simple alert box that says "this is another box". </p>
+
+    <h4> Proof of vulnerability </h4>
+
+        <p> This is what the popup window looks like: </p>
+
+        <img src="infowindow.png">
+
+    <h4> Resolution </h4>
+
+        <p> The solution to such a vulnerability is to clean the data prior to handling and uploading to the server. We could include a validator that parses the input data and removies suspicious characters in the POST request.</p>
+
+    <h3> b. MongoDB injections </h3>
+    <h4> Location </h4>
+        <p>Query string send to server on /scores.json</p>
+
+    <h4> Severity of issue </h4>
+        <p> HIGH. MongoDB does not have an in-built validator and thus the query string was used in its entirety. This will give malicious users access to unauthorized data. </p>
+
+    <h4> Description of issue </h4>
+        <p> Through modification of the a query string by adding in the string "[$ne]", I was able to obtain all of the data on the database in JSON format. In this particular example, I was able to gain access to grid data which would not normally be available to me. This is a serious issue for sites that may store user information such as credit cards, addresses, etc.</p>
+
+    <h4> Proof of vulnerability </h4>
+        <p> Running a normal query string would give either an empty JSON or all the related user data: </p>
+
+        <img src="db_inject-pre.png">
+
+        <p> All data was retrieved by simply adding the "[$ne] string</p>
+
+        <img src="db_inject.png">        
+
+    <h4> Resolution </h4>
+
+        <p> To resolve this issue, we must check for validity of the query string on the server side via a validator. This will prevent malicious database request from being passed onto the server. </p>
+
+    <h3> c. Bash Scripting </h3>
+    <h4> Location </h4>
+        <p>Server implementation</p>
+
+    <h4> Severity of issue </h4>
+        <p>MODERATE. Inability to prevent spam from third party sources is a moderately severe vulnerability as it exposes the webside to potential DDOS attacks. If the server is not able to handle many requests at once it might crash. Furthermore, it would be easy to flood most databases with junk data that would make the entire database useless.</p>
+
+    <h4> Description of issue </h4>
+        <p> I was able to write a simple bash script (see below) that runs an infinite loop of POST requests to the server. The implementation i wrote send "thisisinfinite" as a user. If I had left the code running continously, it might make the database unusuable as seen in class.</p>
+
+        <img src="script.png">
+
+    <h4> Proof of vulnerability </h4>
+
+        <p>After running the script for only 1-2 seconds, we can see that there are many entries in the database:</p>
+
+        <img src="bash-script.png">
+
+    <h4> Resolution </h4>
+
+        <p>To solve this, it is recommended that the server has controls that limit the amount of requests based on IP address. This prevents one user from sending too many requests to the server at once. In addition, there could be additional processes that check if many duplicate entries are made which is a good indicator of repetitive scripts.</p>
+
+
+    <h2> 5. Conclusion </h2>
+
+        <p> In conclusion, the server application has many security vulnerabilities. In practice, it would be unusuable and is highly susceptible to even simple malicious attacks. It should definitely not be used to store any user-sensitive data. </p>
+    
+    <h2> 6. References</h2>
+    
+        <p> Many sources were used in the security check. Ming's github entries on security, online sources on Bash Scripting, XSS, and MongoDB injections. </p> 
+
+</body>
+</html>
